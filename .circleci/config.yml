@@ -1,0 +1,22 @@
+defaults:
+  steps:
+    - checkout
+    - run: build
+version: 2
+jobs:
+  build:
+    docker:
+      - image: ubuntu:18.04
+
+    working_directory: ~
+
+    steps:
+      - checkout 
+      - run:
+          name: build nightly
+          command: |
+              export DATETAG=`date +%Y-%m-%d`
+              docker login -u $DOCKERUSR -p $DOCKERPWD
+              docker build -t latest -t "$DATETAG" .
+              docker run latest perl6 -v
+              exit $?
