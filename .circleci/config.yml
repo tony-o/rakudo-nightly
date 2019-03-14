@@ -9,10 +9,12 @@ jobs:
           command: |
               export DATETAG=`date +%Y-%m-%d`
               docker login -u $DOCKERUSR -p $DOCKERPWD
-              docker build --tag="$DATETAG" --tag=latest .
+              docker build --tag=nightly .
               docker run latest perl6 -v
               if [[ "$?" == "0" ]]; then
                 echo "DATETAG: $DATETAG"
+                docker tag nightly tonyodell/rakudo-nightly:latest
+                docker tag nightly tonyodell/rakudo-nightly:$DATETAG
                 docker push tonyodell/rakudo-nightly:latest
                 docker push tonyodell/rakudo-nightly:$DATETAG
                 exit "$?"
