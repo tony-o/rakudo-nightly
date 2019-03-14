@@ -1,15 +1,7 @@
-defaults:
-  steps:
-    - checkout
-    - run: build
 version: 2
 jobs:
   build:
-    docker:
-      - image: ubuntu:18.04
-
-    working_directory: ~
-
+    machine: true
     steps:
       - checkout 
       - run:
