@@ -18,3 +18,13 @@ jobs:
               else
                 exit 1
               fi
+workflows:
+  version: 2
+  nightly:
+    triggers:
+      - schedule:
+          cron: "10 20 * * *"
+          filters:
+            branches:
+              only:
+               - master
