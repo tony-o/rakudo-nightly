@@ -11,4 +11,10 @@ jobs:
               docker login -u $DOCKERUSR -p $DOCKERPWD
               docker build -t latest -t "$DATETAG" .
               docker run latest perl6 -v
-              exit $?
+              if [[ "$?" == "0" ]]; then
+                docker push tonyodell/rakudo-nightly:latest
+                docker push tonyodell/rakudo-nightly:$DATETAG
+                exit "$?"
+              else
+                exit 1
+              fi
