@@ -3,7 +3,8 @@ FROM alpine:edge
 WORKDIR /usr/local/src
 
 RUN apk update
-RUN apk add --update curl openssl gnupg git build-base openjdk9-jdk nodejs
+RUN apk add --update curl openssl gnupg git build-base nodejs
+RUN apk search jdk
 
 RUN node -v
 
