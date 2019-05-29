@@ -15,7 +15,7 @@ CMD ["/opt/jdk-9/bin/jlink", "--module-path /opt/jdk-9/jmods", "--verbose", "--a
 WORKDIR /app
 
 ENV JAVA_HOME=/opt/jdk-9
-ENV PATH=$PATH:$JAVA_HOME
+ENV PATH="$PATH:$JAVA_HOME/bin"
 
 RUN javac --version
 
