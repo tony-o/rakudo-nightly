@@ -7,26 +7,15 @@ RUN apk search gzip
 RUN apk search gunzip
 RUN apk add --update curl openssl gnupg git build-base nodejs perl gzip wget
 
-RUN wget -O /opt/jdk.tar.gz https://zef.pm/openjdk-9_linux-x64_bin.tar.gz
+RUN wget -O /opt/jdk.tar.gz https://zef.pm/openjdk-9_linux-x64_bin.tar.gz >/dev/null
 RUN tar xvf /opt/jdk.tar.gz -C /opt
-ENV PATH=/opt/jdk-9/bin:$PATH
-RUN ls -l /opt/jdk-9/bin 
 CMD ["/opt/jdk-9/javac", "--version"]
-#CMD ["/opt/jdk-9/bin/jlink", "--module-path /opt/jdk-9/jmods", "--verbose", "--add-modules java.base,java.logging,java.xml,jdk.unsupported", "--compress 2", "--no-header-files", "--output /opt/jdk-9-minimal"]
+CMD ["/opt/jdk-9/bin/jlink", "--module-path /opt/jdk-9/jmods", "--verbose", "--add-modules java.base,java.logging,java.xml,jdk.unsupported", "--compress 2", "--no-header-files", "--output /opt/jdk-9-minimal"]
 
 WORKDIR /app
 
-COPY backend-module/target/backend-module-1.0-SNAPSHOT.jar .
-COPY frontend-module/target/frontend-module-1.0-SNAPSHOT.jar .
-
-RUN jlink --module-path backend-module-1.0-SNAPSHOT.jar:frontend-module-1.0-SNAPSHOT.jar:$JAVA\_HOME/jmods \
-        --add-modules com.jdriven.java9runtime.frontend \
-        --launcher run=com.jdriven.java9runtime.frontend/com.jdriven.java9runtime.frontend.FrontendApplication \
-        --output dist \
-        --compress 2 \
-        --strip-debug \
-        --no-header-files \
-        --no-man-pages
+ENV JAVA_HOME=/opt/jdk-9-minimal
+ENV PATH=$PATH:$JAVA_HOME
 
 RUN javac --version
 
