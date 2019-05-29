@@ -14,8 +14,8 @@ CMD ["/opt/jdk-9/bin/jlink", "--module-path /opt/jdk-9/jmods", "--verbose", "--a
 
 WORKDIR /app
 
-RUN echo 'export JAVA_HOME="/opt/jdk-9"' >> $BASH_ENV
-RUN echo 'export PATH="$PATH:$JAVA_HOME/bin"' >> $BASH_ENV
+ENV JAVA_HOME=/opt/jdk-9
+ENV PATH="$PATH:${JAVA_HOME}/bin"
 
 RUN javac --version
 
