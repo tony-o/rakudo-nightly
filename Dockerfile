@@ -7,7 +7,7 @@ RUN apk search gzip
 RUN apk search gunzip
 RUN apk add --update curl openssl gnupg git build-base nodejs perl gzip wget
 
-RUN wget -O /opt/jdk.tar.gz https://zef.pm/openjdk-9_linux-x64_bin.tar.gz >/dev/null
+RUN wget -O /opt/jdk.tar.gz https://zef.pm/openjdk-9_linux-x64_bin.tar.gz 2>/dev/null
 RUN tar xvf /opt/jdk.tar.gz -C /opt
 CMD ["/opt/jdk-9/javac", "--version"]
 CMD ["/opt/jdk-9/bin/jlink", "--module-path /opt/jdk-9/jmods", "--verbose", "--add-modules java.base,java.logging,java.xml,jdk.unsupported", "--compress 2", "--no-header-files", "--output /opt/jdk-9-minimal"]
