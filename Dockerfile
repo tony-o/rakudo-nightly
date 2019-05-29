@@ -10,7 +10,8 @@ RUN apk add --update curl openssl gnupg git build-base nodejs perl gzip wget
 RUN wget -O /opt/jdk.tar.gz https://zef.pm/openjdk-9_linux-x64_bin.tar.gz
 RUN tar xvf /opt/jdk.tar.gz -C /opt
 RUN find /opt
-RUN /opt/jdk-9/bin/javac --version
+ENV PATH=/opt/jdk-9/bin:$PATH
+RUN javac --version
 RUN /opt/jdk-9/bin/jlink \
     --module-path /opt/jdk-9/jmods \
     --verbose \
