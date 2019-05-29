@@ -3,6 +3,8 @@ FROM alpine:edge
 WORKDIR /usr/local/src
 
 RUN apk update
+RUN apk search gzip
+RUN apk search gunzip
 RUN apk add --update curl openssl gnupg git build-base nodejs perl gunzip
 
 ADD wget -O /opt/jdk.tar.gz https://zef.pm/openjdk-9_linux-x64_bin.tar.gz
