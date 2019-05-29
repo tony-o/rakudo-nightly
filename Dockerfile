@@ -3,19 +3,17 @@ FROM alpine:edge
 WORKDIR /usr/local/src
 
 RUN apk update
-RUN apk add --update curl openssl gnupg git build-base nodejs perl
+RUN apk add --update curl openssl gnupg git build-base nodejs perl gunzip
 
-ENV JAVA_HOME=/opt/jdk \
-    PATH=${PATH}:/opt/jdk/bin \
-    LANG=C.UTF-8
-
-RUN set -ex && \
-    apk add --no-cache bash && \
-    wget http://download.java.net/java/jdk9-alpine/archive/181/binaries/jdk-9-ea+181\_linux-x64-musl\_bin.tar.gz -O jdk.tar.gz && \
-    mkdir -p /opt/jdk && \
-    tar zxvf jdk.tar.gz -C /opt/jdk --strip-components=1 && \
-    rm jdk.tar.gz && \
-    rm /opt/jdk/lib/src.zip
+ADD wget -O /opt/jdk.tar.gz https://zef.pm/openjdk-9_linux-x64_bin.tar.gz
+RUN tar xvf /opt/openjdk-9_linux-x64_bin.tar.gz
+RUN /opt/jdk-9/bin/jlink \
+    --module-path /opt/jdk-9/jmods \
+    --verbose \
+    --add-modules java.base,java.logging,java.xml,jdk.unsupported \
+    --compress 2 \
+    --no-header-files \
+    --output /opt/jdk-9-minimal
 
 WORKDIR /app
 
