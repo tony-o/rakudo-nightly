@@ -14,6 +14,8 @@ CMD ["/opt/jdk-9/bin/jlink", "--module-path /opt/jdk-9/jmods", "--verbose", "--a
 
 WORKDIR /app
 
+RUN find /opt/jdk-9-minimal
+
 ENV JAVA_HOME=/opt/jdk-9-minimal
 ENV PATH=$PATH:$JAVA_HOME
 
