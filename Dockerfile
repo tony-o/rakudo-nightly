@@ -3,7 +3,10 @@ FROM alpine:edge
 WORKDIR /usr/local/src
 
 RUN apk update
-RUN apk add --update curl openssl gnupg git build-base nodejs openjdk8-jre perl
+RUN apk add --update curl openssl gnupg git build-base nodejs openjdk8 perl
+
+ENV JAVA_HOME=/usr/lib/jvm/java-1.8-openjdk
+ENV PATH="$JAVA_HOME/bin:${PATH}"
 
 RUN node -v
 
@@ -19,3 +22,5 @@ RUN ln -s "$(cd /usr/local/src/zef; perl6-m -I. bin/zef install . | egrep -A 1 '
 
 CMD ["/usr/local/bin/perl6", "-v"]
 CMD ["/usr/local/bin/zef", "-v"]
+
+RUN apk del curl openssl gnupg git build-base nodejs openjdk8-jre perl
