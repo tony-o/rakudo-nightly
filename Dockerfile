@@ -12,13 +12,7 @@ RUN tar xvf /opt/jdk.tar.gz -C /opt
 ENV PATH=/opt/jdk-9/bin:$PATH
 RUN ls -l /opt/jdk-9/bin 
 CMD ["/opt/jdk-9/javac", "--version"]
-CMD ["/opt/jdk-9/bin/jlink",
-     "--module-path /opt/jdk-9/jmods"
-     "--verbose"
-     "--add-modules java.base,java.logging,java.xml,jdk.unsupported",
-     "--compress 2",
-     "--no-header-files",
-     "--output /opt/jdk-9-minimal"]
+CMD ["/opt/jdk-9/bin/jlink", "--module-path /opt/jdk-9/jmods", "--verbose", "--add-modules java.base,java.logging,java.xml,jdk.unsupported", "--compress 2", "--no-header-files", "--output /opt/jdk-9-minimal"]
 
 WORKDIR /app
 
