@@ -1,24 +1,44 @@
-FROM alpine:edge
+FROM ubuntu:latest as X1
 
-WORKDIR /usr/local/src
+MAINTAINER zef:tony-o
 
-RUN apk update
-RUN apk add --update curl openssl gnupg git build-base nodejs perl
-RUN apk add openjdk9-jdk --repository=http://dl-cdn.alpinelinux.org/alpine/edge/testing
-RUN ln -s /usr/lib/jvm/default-jvm/bin/javac /usr/bin/javac
-RUN ln -s /usr/lib/jvm/default-jvm/bin/jar /usr/bin/jar
+RUN apt update && apt install -y --no-install-recommends \
+  autoconf \
+  automake \
+  build-essential \
+  curl \
+  g++ \
+  gcc \
+  git \
+  gzip \
+  libcurl4-openssl-dev \
+  libpq-dev \
+  libssl-dev \
+  libxml2-dev \
+  make \
+  openjdk-11-jdk \
+  postgresql-server-dev-all \
+  python3-pip \
+  python3-setuptools \
+  tar \
+  wget \
+  && rm -rf /var/lib/apt/lists/*
 
-WORKDIR /app
+RUN git clone https://github.com/rakudo/rakudo.git /tmp/rakudo && \
+  cd /tmp/rakudo && \
+  perl Configure.pl --gen-nqp --gen-moar --backends=moar --prefix=/usr/local && \
+  make && \
+  make install
 
-RUN git clone https://github.com/rakudo/rakudo.git /usr/local/src/rakudo
+RUN git clone https://github.com/ugexe/zef.git /tmp/zef && \
+  cd /tmp/zef && \
+  perl6 -Ilib bin/zef install --/test .
 
-RUN cd /usr/local/src/rakudo; perl Configure.pl --gen-moar --gen-nqp --backends=moar,jvm --prefix=/usr/local && make && make install
+FROM ubuntu:latest as X2
 
-RUN git clone https://github.com/ugexe/zef.git /usr/local/src/zef
-RUN ln -s "$(cd /usr/local/src/zef; perl6-m -I. bin/zef install . | egrep -A 1 'script .*? installed to:' | tail -n 1)/zef" /usr/local/bin/zef-m
-RUN ln -s "$(cd /usr/local/src/zef; perl6-j -I. bin/zef install . | egrep -A 1 'script .*? installed to:' | tail -n 1)/zef" /usr/local/bin/zef-j
-RUN ln -s "$(cd /usr/local/src/zef; perl6   -I. bin/zef install . | egrep -A 1 'script .*? installed to:' | tail -n 1)/zef" /usr/local/bin/zef
+COPY --from=X1 /usr /usr
+COPY --from=X1 /lib /lib
+
+ENV PATH="/usr/local/share/perl6/site/bin:${PATH}"
 
 CMD ["/usr/local/bin/perl6"]
-
-RUN apk del curl openssl gnupg git build-base nodejs perl
