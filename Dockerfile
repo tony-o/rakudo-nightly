@@ -3,7 +3,7 @@ FROM ubuntu:latest
 WORKDIR /usr/local/src
 
 RUN apt-get update
-RUN apt-get install -y curl gnupg2 git build-essential default-jdk
+RUN apt-get install -y curl gnupg2 git build-essential default-jdk libperl-dev
 RUN curl -sL https://deb.nodesource.com/setup_10.x | bash -
 RUN apt-get install -y nodejs
 
