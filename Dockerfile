@@ -1,23 +1,74 @@
-FROM ubuntu:latest
+FROM ubuntu:latest as X1
 
-WORKDIR /usr/local/src
+MAINTAINER zef:tony-o
 
-RUN apt-get update
-RUN DEBIAN_FRONTEND=noninteractive apt-get install -y curl gnupg2 git build-essential default-jdk libperl-dev
-RUN curl -sL https://deb.nodesource.com/setup_10.x | bash -
-RUN apt-get install -y nodejs
+ENV DEBIAN_FRONTEND=noninteractive
+RUN apt update && apt install -y --no-install-recommends \
+  autoconf \
+  automake \
+  build-essential \
+  curl \
+  g++ \
+  gcc \
+  git \
+  gzip \
+  libcurl4-openssl-dev \
+  libpq-dev \
+  libssl-dev \
+  libxml2-dev \
+  make \
+  openjdk-11-jdk \
+  postgresql-server-dev-all \
+  python3-pip \
+  python3-setuptools \
+  tar \
+  wget \
+  && rm -rf /var/lib/apt/lists/*
 
-RUN node -v
+RUN git clone https://github.com/rakudo/rakudo.git /tmp/rakudo && \
+  cd /tmp/rakudo && \
+  perl Configure.pl --gen-nqp --gen-moar --backends=moar --prefix=/root/bin && \
+  make && \
+  make install
 
-RUN git clone https://github.com/rakudo/rakudo.git /usr/local/src/rakudo
+ENV PATH="/root/bin/bin:${PATH}"
+RUN git clone https://github.com/ugexe/zef.git /tmp/zef && \
+  cd /tmp/zef && \
+  perl6 -Ilib bin/zef install --/test .
 
-RUN cd /usr/local/src/rakudo; perl Configure.pl --gen-moar --gen-nqp --backends=moar --prefix=/usr/local && make && make install
-#RUN cd /usr/local/src/rakudo; perl Configure.pl --gen-moar --gen-nqp --backends=jvm  --prefix=/usr/local && make && make install
-#RUN cd /usr/local/src/rakudo; perl Configure.pl --gen-moar --gen-nqp --backends=js   --prefix=/usr/local && make && make install
+RUN cd /tmp && \
+    curl -Lo o.tar.gz https://github.com/openssl/openssl/archive/OpenSSL_1_1_1g.tar.gz && \
+    tar xvf o.tar.gz && \
+    cd openssl-OpenSSL_1_1_1g && \
+    ./config --prefix=/usr/local --openssldir=/usr/local -Wl,-rpath=/usr/local/lib && \
+    make && \
+    make install && \
+    cd /tmp && \
+    curl -Lo c.tar.gz https://curl.haxx.se/download/curl-7.71.1.tar.gz && \
+    tar xvf c.tar.gz && \
+    cd curl-7.71.1 && \
+    env CFLAGS=-Wl,-rpath=/usr/local/lib \
+      PKG_CONFIG=/usr/local ./configure \
+        --prefix=/usr/local \
+        --disable-shared \
+        --enable-static \
+        --enable-threaded-resolver \
+        --with-ssl && \
+    make && \
+    make install
 
-RUN git clone https://github.com/ugexe/zef.git /usr/local/src/zef
-#RUN cd /usr/local/src/zef; perl6-m -I. bin/zef install .
-RUN ln -s "$(cd /usr/local/src/zef; perl6-m -I. bin/zef install . | egrep -A 1 'script .*? installed to:' | tail -n 1)/zef" /usr/local/bin/zef
+FROM ubuntu:latest as X2
 
-CMD ["/usr/local/bin/perl6", "-v"]
-CMD ["/usr/local/bin/zef", "-v"]
+#COPY --from=X1 /usr /usr
+#COPY --from=X1 /lib /lib
+COPY --from=X1 /root/bin /root/bin
+COPY --from=X1 /usr/local/bin/curl /usr/local/bin/curl
+COPY --from=X1 /usr/local/lib/libcurl.* /usr/local/lib/
+COPY --from=X1 /usr/local/lib/libssl.* /usr/local/lib/
+COPY --from=X1 /usr/local/lib/libcrypto.* /usr/local/lib/
+COPY --from=X1 /usr/bin/git /usr/bin/git
+COPY --from=X1 /etc/ssl /etc/ssl
+
+ENV PATH="/root/bin/bin:/root/bin/share/perl6/site/bin:${PATH}"
+
+CMD ["/bin/bin/perl6"]
