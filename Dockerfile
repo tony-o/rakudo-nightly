@@ -40,16 +40,16 @@ RUN cd /tmp && \
     curl -Lo o.tar.gz https://github.com/openssl/openssl/archive/OpenSSL_1_1_1g.tar.gz && \
     tar xvf o.tar.gz && \
     cd openssl-OpenSSL_1_1_1g && \
-    ./config --prefix=/usr/local --openssldir=/usr/local -Wl,-rpath=/usr/local/lib && \
+    ./config --prefix=/usr --openssldir=/usr -Wl,-rpath=/usr/lib && \
     make && \
     make install && \
     cd /tmp && \
     curl -Lo c.tar.gz https://curl.haxx.se/download/curl-7.71.1.tar.gz && \
     tar xvf c.tar.gz && \
     cd curl-7.71.1 && \
-    env CFLAGS=-Wl,-rpath=/usr/local/lib \
-      PKG_CONFIG=/usr/local ./configure \
-        --prefix=/usr/local \
+    env CFLAGS=-Wl,-rpath=/usr/lib \
+      PKG_CONFIG=/usr ./configure \
+        --prefix=/usr \
         --disable-shared \
         --enable-static \
         --enable-threaded-resolver \
@@ -62,10 +62,10 @@ FROM ubuntu:latest as X2
 #COPY --from=X1 /usr /usr
 #COPY --from=X1 /lib /lib
 COPY --from=X1 /root/bin /root/bin
-COPY --from=X1 /usr/local/bin/curl /usr/local/bin/curl
-COPY --from=X1 /usr/local/lib/libcurl.* /usr/local/lib/
-COPY --from=X1 /usr/local/lib/libssl.* /usr/local/lib/
-COPY --from=X1 /usr/local/lib/libcrypto.* /usr/local/lib/
+COPY --from=X1 /usr/bin/curl /usr/bin/curl
+COPY --from=X1 /usr/lib/libcurl.* /usr/lib/
+COPY --from=X1 /usr/lib64/libssl.* /usr/lib/
+COPY --from=X1 /usr/lib64/libcrypto.* /usr/lib/
 COPY --from=X1 /usr/bin/git /usr/bin/git
 COPY --from=X1 /etc/ssl /etc/ssl
 
