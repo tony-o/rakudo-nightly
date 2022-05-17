@@ -57,7 +57,7 @@ RUN cd /tmp && \
     make && \
     make install
 
-FROM ubuntu:latest as X2
+FROM ubuntu:21.10 as X2
 
 #COPY --from=X1 /usr /usr
 #COPY --from=X1 /lib /lib
