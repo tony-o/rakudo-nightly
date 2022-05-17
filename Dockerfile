@@ -57,6 +57,8 @@ RUN cd /tmp && \
     make && \
     make install
 
+RUN ls /usr/lib && ls /usr/lib64
+
 FROM ubuntu:21.10 as X2
 
 #COPY --from=X1 /usr /usr
