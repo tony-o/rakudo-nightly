@@ -66,8 +66,8 @@ FROM ubuntu:21.10 as X2
 COPY --from=X1 /root/bin /root/bin
 COPY --from=X1 /usr/bin/curl /usr/bin/curl
 COPY --from=X1 /usr/lib/libcurl.* /usr/lib/
-COPY --from=X1 /usr/lib/libssl.* /usr/lib/
-COPY --from=X1 /usr/lib/libcrypto.* /usr/lib/
+COPY --from=X1 /usr/lib64/libssl.* /usr/lib64/
+COPY --from=X1 /usr/lib64/libcrypto.* /usr/lib64/
 COPY --from=X1 /usr/bin/git /usr/bin/git
 COPY --from=X1 /etc/ssl /etc/ssl
 
