@@ -34,14 +34,14 @@ RUN git clone https://github.com/rakudo/rakudo.git /tmp/rakudo && \
 ENV PATH="/root/bin/bin:${PATH}"
 RUN git clone https://github.com/ugexe/zef.git /tmp/zef && \
   cd /tmp/zef && \
-  perl6 -Ilib bin/zef install --/test .
+  raku -Ilib bin/zef install --/test .
 
 FROM ubuntu:22.04 as X2
 
 COPY --from=X1 /root/bin /root/bin
 COPY --from=X1 /usr/bin/git /usr/bin/git
 COPY --from=X1 /etc/ssl /etc/ssl
-COPY --from=X1 /usr/bin/curl /usr/bin/curl
+#COPY --from=X1 /usr/bin/curl /usr/bin/curl
 
 #COPY --from=X1 /usr/lib/aarch64-linux-gnu/libcurl.* /usr/lib/aarch64-linux-gnu/
 #COPY --from=X1 /usr/lib/aarch64-linux-gnu/libz.* /usr/lib/aarch64-linux-gnu/
