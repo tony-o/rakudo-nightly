@@ -36,6 +36,8 @@ RUN git clone https://github.com/ugexe/zef.git /tmp/zef && \
   cd /tmp/zef && \
   raku -Ilib bin/zef install --/test .
 
+RUN ld curl && ld git
+
 FROM ubuntu:22.04 as X2
 
 COPY --from=X1 /root/bin /root/bin
