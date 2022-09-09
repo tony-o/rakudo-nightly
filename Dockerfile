@@ -1,4 +1,4 @@
-FROM ubuntu:21.10 as X1
+FROM ubuntu:22.04 as X1
 
 MAINTAINER zef:tony-o
 
@@ -42,8 +42,8 @@ RUN cd /tmp && \
     cd openssl-OpenSSL_1_1_1g && \
     ./config --prefix=/usr --openssldir=/usr -Wl,-rpath=/usr/lib && \
     make && \
-    make install && \
-    cd /tmp && \
+    make install
+RUN cd /tmp && \
     curl -Lo c.tar.gz https://curl.haxx.se/download/curl-7.71.1.tar.gz && \
     tar xvf c.tar.gz && \
     cd curl-7.71.1 && \
@@ -57,9 +57,7 @@ RUN cd /tmp && \
     make && \
     make install
 
-RUN ls /usr/lib && ls /usr/lib64
-
-FROM ubuntu:21.10 as X2
+FROM ubuntu:22.04 as X2
 
 #COPY --from=X1 /usr /usr
 #COPY --from=X1 /lib /lib
@@ -73,4 +71,6 @@ COPY --from=X1 /etc/ssl /etc/ssl
 
 ENV PATH="/root/bin/bin:/root/bin/share/perl6/site/bin:${PATH}"
 
-CMD ["/bin/bin/perl6"]
+RUN rakudo -v && zef update
+
+CMD ["rakudo"]
