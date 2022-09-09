@@ -36,25 +36,12 @@ RUN git clone https://github.com/ugexe/zef.git /tmp/zef && \
   cd /tmp/zef && \
   perl6 -Ilib bin/zef install --/test .
 
-RUN cd /tmp && \
-    curl -Lo o.tar.gz https://github.com/openssl/openssl/archive/OpenSSL_1_1_1g.tar.gz && \
-    tar xvf o.tar.gz && \
-    cd openssl-OpenSSL_1_1_1g && \
-    ./config --prefix=/usr --openssldir=/usr -Wl,-rpath=/usr/lib && \
-    make && \
-    make install
-
-RUN find /usr -name 'libnghttp2.*'
-
 FROM ubuntu:22.04 as X2
 
-#COPY --from=X1 /usr /usr
-#COPY --from=X1 /lib /lib
 COPY --from=X1 /root/bin /root/bin
 COPY --from=X1 /usr/bin/git /usr/bin/git
 COPY --from=X1 /etc/ssl /etc/ssl
 COPY --from=X1 /usr/bin/curl /usr/bin/curl
-COPY --from=X1 /usr/lib/libcrypto.* /usr/lib/
 
 COPY --from=X1 /lib/aarch64-linux-gnu/libcurl.so.4 /lib/aarch64-linux-gnu/libcurl.so.4
 COPY --from=X1 /lib/aarch64-linux-gnu/libz.so.1 /lib/aarch64-linux-gnu/libz.so.1
