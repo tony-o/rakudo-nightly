@@ -36,7 +36,7 @@ RUN git clone https://github.com/ugexe/zef.git /tmp/zef && \
   cd /tmp/zef && \
   raku -Ilib bin/zef install --/test .
 
-RUN ldd /usr/bin/curl && ldd /usr/bin/git | uniq
+RUN find /usr/lib/aarch64-linux-gnu | egrep 'lib(curl|z|c|nghttp2|idn2|rtmp|ssh|psl|ssl|crypto|gssapi|ldap|lber|zstd|brotlidec|unistring|gnutls|hogweed|nettle|gmp|krb5|k5crypto|com_err|krb5support|sasl2|brotlicommon|p11-kit|tasn1|keyutils|resolv|ffi|pcre)'
 
 FROM ubuntu:22.04 as X2
 
@@ -77,8 +77,6 @@ COPY --from=X1 /usr/lib/aarch64-linux-gnu/libkeyutils.so.1 /usr/lib/aarch64-linu
 COPY --from=X1 /usr/lib/aarch64-linux-gnu/libresolv.so.2 /usr/lib/aarch64-linux-gnu/libresolv.so.2
 COPY --from=X1 /usr/lib/aarch64-linux-gnu/libffi.so.8 /usr/lib/aarch64-linux-gnu/libffi.so.8
 COPY --from=X1 /usr/lib/aarch64-linux-gnu/libpcre2-8.so.0 /usr/lib/aarch64-linux-gnu/libpcre2-8.so.0
-COPY --from=X1 /usr/lib/aarch64-linux-gnu/libz.so.1 /usr/lib/aarch64-linux-gnu/libz.so.1
-COPY --from=X1 /usr/lib/aarch64-linux-gnu/libc.so.6 /usr/lib/aarch64-linux-gnu/libc.so.6
 
 ENV PATH="/root/bin/bin:/root/bin/share/perl6/site/bin:${PATH}"
 
