@@ -75,9 +75,6 @@ COPY --from=X1 /lib/aarch64-linux-gnu/libkeyutils.so.1 /lib/aarch64-linux-gnu/li
 COPY --from=X1 /lib/aarch64-linux-gnu/libresolv.so.2 /lib/aarch64-linux-gnu/libresolv.so.2
 COPY --from=X1 /lib/aarch64-linux-gnu/libffi.so.8 /lib/aarch64-linux-gnu/libffi.so.8
 
-
-RUN curl --version
-
 ENV PATH="/root/bin/bin:/root/bin/share/perl6/site/bin:${PATH}"
 
 RUN rakudo -v && zef update
