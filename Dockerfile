@@ -36,7 +36,7 @@ RUN git clone https://github.com/ugexe/zef.git /tmp/zef && \
   cd /tmp/zef && \
   raku -Ilib bin/zef install --/test .
 
-RUN find /usr/lib/aarch64-linux-gnu | egrep 'lib(curl|z|c|nghttp2|idn2|rtmp|ssh|psl|ssl|crypto|gssapi|ldap|lber|zstd|brotlidec|unistring|gnutls|hogweed|nettle|gmp|krb5|k5crypto|com_err|krb5support|sasl2|brotlicommon|p11-kit|tasn1|keyutils|resolv|ffi|pcre)'
+RUN find /usr | egrep 'lib(curl|z|c|nghttp2|idn2|rtmp|ssh|psl|ssl|crypto|gssapi|ldap|lber|zstd|brotlidec|unistring|gnutls|hogweed|nettle|gmp|krb5|k5crypto|com_err|krb5support|sasl2|brotlicommon|p11-kit|tasn1|keyutils|resolv|ffi|pcre)'
 
 FROM ubuntu:22.04 as X2
 
