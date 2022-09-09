@@ -36,7 +36,8 @@ RUN git clone https://github.com/ugexe/zef.git /tmp/zef && \
   cd /tmp/zef && \
   raku -Ilib bin/zef install --/test .
 
-RUN ld curl && ld git
+RUN which curl && which git
+RUN ldd /usr/bin/curl && ldd /usr/bin/git | uniq
 
 FROM ubuntu:22.04 as X2
 
@@ -45,37 +46,40 @@ COPY --from=X1 /usr/bin/git /usr/bin/git
 COPY --from=X1 /etc/ssl /etc/ssl
 COPY --from=X1 /usr/bin/curl /usr/bin/curl
 
-COPY --from=X1 /usr/lib/aarch64-linux-gnu/libcurl.* /usr/lib/aarch64-linux-gnu/
-COPY --from=X1 /usr/lib/aarch64-linux-gnu/libz.* /usr/lib/aarch64-linux-gnu/
-COPY --from=X1 /usr/lib/aarch64-linux-gnu/libc.* /usr/lib/aarch64-linux-gnu/
-COPY --from=X1 /usr/lib/aarch64-linux-gnu/libnghttp2.* /usr/lib/aarch64-linux-gnu/
-COPY --from=X1 /usr/lib/aarch64-linux-gnu/libidn2.* /usr/lib/aarch64-linux-gnu/
-COPY --from=X1 /usr/lib/aarch64-linux-gnu/librtmp.* /usr/lib/aarch64-linux-gnu/
-COPY --from=X1 /usr/lib/aarch64-linux-gnu/libssh.* /usr/lib/aarch64-linux-gnu/
-COPY --from=X1 /usr/lib/aarch64-linux-gnu/libpsl.* /usr/lib/aarch64-linux-gnu/
-COPY --from=X1 /usr/lib/aarch64-linux-gnu/libssl.* /usr/lib/aarch64-linux-gnu/
-COPY --from=X1 /usr/lib/aarch64-linux-gnu/libcrypto.* /usr/lib/aarch64-linux-gnu/
-COPY --from=X1 /usr/lib/aarch64-linux-gnu/libgssapi_krb5.* /usr/lib/aarch64-linux-gnu/
-COPY --from=X1 /usr/lib/aarch64-linux-gnu/libldap-2.5.* /usr/lib/aarch64-linux-gnu/
-COPY --from=X1 /usr/lib/aarch64-linux-gnu/liblber-2.5.* /usr/lib/aarch64-linux-gnu/
-COPY --from=X1 /usr/lib/aarch64-linux-gnu/libzstd.* /usr/lib/aarch64-linux-gnu/
-COPY --from=X1 /usr/lib/aarch64-linux-gnu/libbrotlidec.* /usr/lib/aarch64-linux-gnu/
-COPY --from=X1 /usr/lib/aarch64-linux-gnu/libunistring.* /usr/lib/aarch64-linux-gnu/
-COPY --from=X1 /usr/lib/aarch64-linux-gnu/libgnutls.* /usr/lib/aarch64-linux-gnu/
-COPY --from=X1 /usr/lib/aarch64-linux-gnu/libhogweed.* /usr/lib/aarch64-linux-gnu/
-COPY --from=X1 /usr/lib/aarch64-linux-gnu/libnettle.* /usr/lib/aarch64-linux-gnu/
-COPY --from=X1 /usr/lib/aarch64-linux-gnu/libgmp.* /usr/lib/aarch64-linux-gnu/
-COPY --from=X1 /usr/lib/aarch64-linux-gnu/libkrb5.* /usr/lib/aarch64-linux-gnu/
-COPY --from=X1 /usr/lib/aarch64-linux-gnu/libk5crypto.* /usr/lib/aarch64-linux-gnu/
-COPY --from=X1 /usr/lib/aarch64-linux-gnu/libcom_err.* /usr/lib/aarch64-linux-gnu/
-COPY --from=X1 /usr/lib/aarch64-linux-gnu/libkrb5support.* /usr/lib/aarch64-linux-gnu/
-COPY --from=X1 /usr/lib/aarch64-linux-gnu/libsasl2.* /usr/lib/aarch64-linux-gnu/
-COPY --from=X1 /usr/lib/aarch64-linux-gnu/libbrotlicommon.* /usr/lib/aarch64-linux-gnu/
-COPY --from=X1 /usr/lib/aarch64-linux-gnu/libp11-kit.* /usr/lib/aarch64-linux-gnu/
-COPY --from=X1 /usr/lib/aarch64-linux-gnu/libtasn1.* /usr/lib/aarch64-linux-gnu/
-COPY --from=X1 /usr/lib/aarch64-linux-gnu/libkeyutils.* /usr/lib/aarch64-linux-gnu/
-COPY --from=X1 /usr/lib/aarch64-linux-gnu/libresolv.* /usr/lib/aarch64-linux-gnu/
-COPY --from=X1 /usr/lib/aarch64-linux-gnu/libffi.* /usr/lib/aarch64-linux-gnu/
+COPY --from=X1 /lib/aarch64-linux-gnu/libcurl.so.4 /lib/aarch64-linux-gnu/libcurl.so.4
+COPY --from=X1 /lib/aarch64-linux-gnu/libz.so.1 /lib/aarch64-linux-gnu/libz.so.1
+COPY --from=X1 /lib/aarch64-linux-gnu/libc.so.6 /lib/aarch64-linux-gnu/libc.so.6
+COPY --from=X1 /lib/aarch64-linux-gnu/libnghttp2.so.14 /lib/aarch64-linux-gnu/libnghttp2.so.14
+COPY --from=X1 /lib/aarch64-linux-gnu/libidn2.so.0 /lib/aarch64-linux-gnu/libidn2.so.0
+COPY --from=X1 /lib/aarch64-linux-gnu/librtmp.so.1 /lib/aarch64-linux-gnu/librtmp.so.1
+COPY --from=X1 /lib/aarch64-linux-gnu/libssh.so.4 /lib/aarch64-linux-gnu/libssh.so.4
+COPY --from=X1 /lib/aarch64-linux-gnu/libpsl.so.5 /lib/aarch64-linux-gnu/libpsl.so.5
+COPY --from=X1 /lib/aarch64-linux-gnu/libssl.so.3 /lib/aarch64-linux-gnu/libssl.so.3
+COPY --from=X1 /lib/aarch64-linux-gnu/libcrypto.so.3 /lib/aarch64-linux-gnu/libcrypto.so.3
+COPY --from=X1 /lib/aarch64-linux-gnu/libgssapi_krb5.so.2 /lib/aarch64-linux-gnu/libgssapi_krb5.so.2
+COPY --from=X1 /lib/aarch64-linux-gnu/libldap-2.5.so.0 /lib/aarch64-linux-gnu/libldap-2.5.so.0
+COPY --from=X1 /lib/aarch64-linux-gnu/liblber-2.5.so.0 /lib/aarch64-linux-gnu/liblber-2.5.so.0
+COPY --from=X1 /lib/aarch64-linux-gnu/libzstd.so.1 /lib/aarch64-linux-gnu/libzstd.so.1
+COPY --from=X1 /lib/aarch64-linux-gnu/libbrotlidec.so.1 /lib/aarch64-linux-gnu/libbrotlidec.so.1
+COPY --from=X1 /lib/aarch64-linux-gnu/libunistring.so.2 /lib/aarch64-linux-gnu/libunistring.so.2
+COPY --from=X1 /lib/aarch64-linux-gnu/libgnutls.so.30 /lib/aarch64-linux-gnu/libgnutls.so.30
+COPY --from=X1 /lib/aarch64-linux-gnu/libhogweed.so.6 /lib/aarch64-linux-gnu/libhogweed.so.6
+COPY --from=X1 /lib/aarch64-linux-gnu/libnettle.so.8 /lib/aarch64-linux-gnu/libnettle.so.8
+COPY --from=X1 /lib/aarch64-linux-gnu/libgmp.so.10 /lib/aarch64-linux-gnu/libgmp.so.10
+COPY --from=X1 /lib/aarch64-linux-gnu/libkrb5.so.3 /lib/aarch64-linux-gnu/libkrb5.so.3
+COPY --from=X1 /lib/aarch64-linux-gnu/libk5crypto.so.3 /lib/aarch64-linux-gnu/libk5crypto.so.3
+COPY --from=X1 /lib/aarch64-linux-gnu/libcom_err.so.2 /lib/aarch64-linux-gnu/libcom_err.so.2
+COPY --from=X1 /lib/aarch64-linux-gnu/libkrb5support.so.0 /lib/aarch64-linux-gnu/libkrb5support.so.0
+COPY --from=X1 /lib/aarch64-linux-gnu/libsasl2.so.2 /lib/aarch64-linux-gnu/libsasl2.so.2
+COPY --from=X1 /lib/aarch64-linux-gnu/libbrotlicommon.so.1 /lib/aarch64-linux-gnu/libbrotlicommon.so.1
+COPY --from=X1 /lib/aarch64-linux-gnu/libp11-kit.so.0 /lib/aarch64-linux-gnu/libp11-kit.so.0
+COPY --from=X1 /lib/aarch64-linux-gnu/libtasn1.so.6 /lib/aarch64-linux-gnu/libtasn1.so.6
+COPY --from=X1 /lib/aarch64-linux-gnu/libkeyutils.so.1 /lib/aarch64-linux-gnu/libkeyutils.so.1
+COPY --from=X1 /lib/aarch64-linux-gnu/libresolv.so.2 /lib/aarch64-linux-gnu/libresolv.so.2
+COPY --from=X1 /lib/aarch64-linux-gnu/libffi.so.8 /lib/aarch64-linux-gnu/libffi.so.8
+COPY --from=X1 /lib/aarch64-linux-gnu/libpcre2-8.so.0 /lib/aarch64-linux-gnu/libpcre2-8.so.0
+COPY --from=X1 /lib/aarch64-linux-gnu/libz.so.1 /lib/aarch64-linux-gnu/libz.so.1
+COPY --from=X1 /lib/aarch64-linux-gnu/libc.so.6 /lib/aarch64-linux-gnu/libc.so.6
 
 ENV PATH="/root/bin/bin:/root/bin/share/perl6/site/bin:${PATH}"
 
