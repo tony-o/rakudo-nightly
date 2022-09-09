@@ -80,6 +80,6 @@ RUN apt update && apt install -y --no-install-recommends curl \
 
 ENV PATH="/root/bin/bin:/root/bin/share/perl6/site/bin:${PATH}"
 
-RUN rakudo -v && zef update
+RUN rakudo -v && zef update && zef -h
 
 CMD ["rakudo"]
